@@ -2,6 +2,8 @@ import sys
 import pom_parser
 
 alias = {
+    "goauth-client" : "goauth",
+    "auth-service-api" : "auth-service",
 }
 
 if __name__ == '__main__':
