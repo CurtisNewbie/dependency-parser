@@ -1,6 +1,9 @@
 import sys
 import pom_parser
 
+alias = {
+}
+
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Specify where the pom is:")
@@ -33,6 +36,7 @@ if __name__ == '__main__':
         name: str = p
         j = name.rfind(".version")
         if j > -1: name = name[:j]
+        if name in alias: name = alias[name]
 
         ver = t.text
         if t is not None: print(f"- [{name} v{ver}](https://github.com/CurtisNewbie/{name}/tree/v{ver})")
