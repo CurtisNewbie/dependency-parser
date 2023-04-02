@@ -35,6 +35,6 @@ if __name__ == '__main__':
         if j > -1: name = name[:j]
 
         ver = t.text
-        if t is not None: print(f"- [{name} v{ver}](https://github.com/curtisnewbie/{name}/tree/v{ver})")
+        if t is not None: print(f"- [{name} v{ver}](https://github.com/CurtisNewbie/{name}/tree/v{ver})")
 
 
