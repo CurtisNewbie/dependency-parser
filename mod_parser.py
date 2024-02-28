@@ -9,8 +9,9 @@ if __name__ == "__main__":
         sys.exit(0)
 
     project_list = [
+        # "gocommon",
+        # "miso",
         "postbox",
-        "miso",
         "gatekeeper",
         "vfm",
         "user-vault",
@@ -18,7 +19,6 @@ if __name__ == "__main__":
         "event-pump",
         "doc-indexer",
         "logbot",
-        "gocommon",
         "mini-fstore",
         "goauth"
     ]
