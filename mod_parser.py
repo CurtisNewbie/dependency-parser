@@ -10,8 +10,8 @@ if __name__ == "__main__":
 
     project_list = [
         # "goauth"
-        # "gocommon",
-        # "miso",
+        "gocommon",
+        "miso",
         "postbox",
         "gatekeeper",
         "vfm",
