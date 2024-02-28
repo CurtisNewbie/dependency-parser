@@ -9,6 +9,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     project_list = [
+        # "goauth"
         # "gocommon",
         # "miso",
         "postbox",
@@ -20,7 +21,6 @@ if __name__ == "__main__":
         "doc-indexer",
         "logbot",
         "mini-fstore",
-        "goauth"
     ]
 
     rootdir = sys.argv[1]
