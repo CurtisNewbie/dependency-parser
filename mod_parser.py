@@ -92,7 +92,10 @@ if __name__ == "__main__":
             # print(project)
             if project not in nodes: continue
             to = nodes[project]
-            digraph +=f'N{curr} -> N{to} [label=" {ver}" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{project} {ver}" labeltooltip="{project} {ver}"]\n'
+            lver = ver
+            if len(lver) > 15:
+                lver = lver[:10] + "..."
+            digraph +=f'N{curr} -> N{to} [label=" {lver}" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{project} {ver}" labeltooltip="{project} {ver}"]\n'
 
     digraph += "}\n"
     print(digraph)
