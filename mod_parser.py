@@ -66,6 +66,7 @@ if __name__ == "__main__":
     # for inf in project_inf: print(inf)
 
     digraph = "digraph \"[dependencies]\" {\n"
+    digraph += "pad=0.5\n"
     digraph += "fontname=\"Helvetica,Arial,sans-serif\"\n"
     digraph += "node [fontname=\"Helvetica,Arial,sans-serif\"]\n"
     digraph += "edge [fontname=\"Helvetica,Arial,sans-serif\"]\n"
@@ -76,7 +77,7 @@ if __name__ == "__main__":
     for inf in project_inf:
         nodes[inf["name"]] = ni
         name = inf['name']
-        digraph +=f'N{ni} [label="{name}" id="node{ni}" fontsize=18 shape=box tooltip="github.com/curtisnewbie/{name}" color="#b20400" fillcolor="#edd6d5"]\n'
+        digraph +=f'N{ni} [label="{name}" id="node{ni}" fontsize=8 shape=box tooltip="github.com/curtisnewbie/{name}" color="#b20400" fillcolor="#edd6d5"]\n'
         ni+=1
 
     for inf in project_inf:
@@ -90,7 +91,7 @@ if __name__ == "__main__":
             # print(ver)
             # print(project)
             to = nodes[project]
-            digraph +=f'N{curr} -> N{to} [label="{ver}" weight=1 color="#b2a999" tooltip="{project} {ver}" labeltooltip="{project} {ver}!"]\n'
+            digraph +=f'N{curr} -> N{to} [label=" {ver}" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{project} {ver}" labeltooltip="{project} {ver}"]\n'
 
     digraph += "}\n"
     print(digraph)
