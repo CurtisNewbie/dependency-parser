@@ -1,5 +1,13 @@
+import subprocess
 from pathlib import Path
 import os, sys
+
+def cli_run(cmd: str):
+    with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE) as p:
+        if p.returncode != None and p.returncode != 0:
+            raise ValueError(f"'{cmd}' failed, returncode {p.returncode}")
+        std = str(p.stdout.read(), 'utf-8')
+        return std
 
 prefix = "github.com/curtisnewbie"
 
@@ -98,8 +106,11 @@ if __name__ == "__main__":
             digraph +=f'N{curr} -> N{to} [label=" {lver}" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{project} {ver}" labeltooltip="{project} {ver}"]\n'
 
     digraph += "}\n"
-    print(digraph)
+    # print(digraph)
 
-    # python3 mod_parser.py ~/dev/git > test.txt && gen_graph test.txt && open out.svg
-    # e.g.,
-    # python3 mod_parser.py ~/dev/git > est.txt && dot -Tsvg test.txt > out.svg && open out.svg
+    with open("out.txt", "+w") as f:
+        f.write(digraph)
+
+    print(cli_run("dot -Tsvg out.txt > out.svg && open svg.html"))
+
+    # python3 mod_parser.py ~/dev/git

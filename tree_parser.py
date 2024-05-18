@@ -148,4 +148,4 @@ if __name__ == "__main__":
     with open("out.txt", "+w") as f:
         f.write(digraph)
 
-    print(cli_run("dot -Tsvg out.txt > out.svg && open out.svg"))
+    print(cli_run("dot -Tsvg out.txt > out.svg && open svg.html"))
