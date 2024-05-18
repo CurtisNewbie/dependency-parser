@@ -26,7 +26,7 @@ if __name__ == "__main__":
     print(fpc)
     lines = fpc.splitlines()
 
-    # with open(fp) as f: lines = f.readlines()
+    # with open("treeout.txt") as f: lines = f.readlines()
 
     seg = []
     inseg = False
@@ -43,10 +43,10 @@ if __name__ == "__main__":
             seg.append(lines[st+1:ed])
 
     debug = ""
-    curr_layer = 0
-    parents = []
     project_inf = {  }
     for se in seg:
+        curr_layer = 0
+        parents = []
         for l in se:
             l = l.strip()
             if l == "": continue
@@ -87,17 +87,24 @@ if __name__ == "__main__":
                 parents.append(v)
                 curr_layer = layer
             else:
-                if layer < curr_layer:
+                if layer <= curr_layer:
                     n = l.strip()
+                    parents.pop()
 
-                    while layer <= curr_layer and len(parents) > 1:
+                    while len(parents) > 1 and layer <= parents[len(parents) - 1]["layer"]:
                         parents.pop()
-                        curr_layer = parents[len(parents) - 1]["layer"]
 
                     p = parents[len(parents) - 1]
                     if n not in p["dependencies"]: p["dependencies"].append(n)
 
-                    if n not in project_inf: project_inf[n] = { "name": n, "dependencies": [], "layer": layer }
+                    v = None
+                    if n in project_inf: v = project_inf[n]
+                    else:
+                        v = { "name": n, "dependencies": [], "layer": layer }
+                        project_inf[n] = v
+
+                    parents.append(v)
+                    curr_layer = layer
 
                 elif layer > curr_layer:
                     n = l.strip()
@@ -129,7 +136,7 @@ if __name__ == "__main__":
     digraph += "ranksep=1.5\n"
     digraph += "overlap=false\n"
     # digraph += "splines=ortho\n"
-    digraph += "layout=circo\n"
+    # digraph += "layout=circo\n"
     digraph += "rankdir=TB\n"
     digraph += "fontname=\"Helvetica,Arial,sans-serif\"\n"
     digraph += "node [fontname=\"Helvetica,Arial,sans-serif\"]\n"
