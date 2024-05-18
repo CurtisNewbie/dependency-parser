@@ -15,8 +15,11 @@ def cli_run(cmd: str):
 """
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Where the dependency:tree output is bro?")
+        print("Where is the project?")
         sys.exit(0)
+
+    root = ""
+    if len(sys.argv) > 2: root = sys.argv[2]
 
     fp = sys.argv[1]
     fpc = cli_run(f"mvn dependency:tree -f {fp}")
@@ -94,6 +97,8 @@ if __name__ == "__main__":
                     p = parents[len(parents) - 1]
                     if n not in p["dependencies"]: p["dependencies"].append(n)
 
+                    if n not in project_inf: project_inf[n] = { "name": n, "dependencies": [], "layer": layer }
+
                 elif layer > curr_layer:
                     n = l.strip()
                     p = parents[len(parents) - 1]
@@ -111,6 +116,7 @@ if __name__ == "__main__":
                     n = l.strip()
                     p = parents[len(parents) - 1]
                     if n not in p["dependencies"]: p["dependencies"].append(n)
+                    if n not in project_inf: project_inf[n] = { "name": n, "dependencies": [], "layer": layer }
 
     with open("out.json", "w+") as f: f.write(json.dumps(project_inf))
     with open("debug.log", "w+") as f: f.write(debug)
@@ -119,30 +125,74 @@ if __name__ == "__main__":
 
     digraph = "digraph \"[dependencies]\" {\n"
     digraph += "pad=0.5\n"
+    digraph += "nodesep=1.5\n"
+    digraph += "ranksep=1.5\n"
+    digraph += "overlap=false\n"
+    # digraph += "splines=ortho\n"
+    digraph += "layout=circo\n"
+    digraph += "rankdir=TB\n"
     digraph += "fontname=\"Helvetica,Arial,sans-serif\"\n"
     digraph += "node [fontname=\"Helvetica,Arial,sans-serif\"]\n"
     digraph += "edge [fontname=\"Helvetica,Arial,sans-serif\"]\n"
     digraph += "node [style=filled fillcolor=\"#f8f8f8\"]\n"
 
-    ni = 1
-    nodes = {}
-    for k in project_inf:
-        inf = project_inf[k]
-        nodes[inf["name"]] = ni
-        name = inf['name']
-        digraph +=f'N{ni} [label="{name}" id="node{ni}" fontsize=8 shape=box color="#b20400" fillcolor="#edd6d5"]\n'
-        ni+=1
+    if not root:
+        ni = 1
+        nodes = {}
+        for k in project_inf:
+            inf = project_inf[k]
+            nodes[inf["name"]] = { "idx" : ni }
+            name = inf['name']
+            digraph +=f'N{ni} [label="{name}" id="node{ni}" fontsize=8 shape=box color="#b20400" fillcolor="#edd6d5"]\n'
+            ni+=1
 
-    for k in project_inf:
-        inf = project_inf[k]
-        curr = nodes[inf["name"]]
-        dependencies = inf['dependencies']
-        for d in dependencies:
-            if d not in nodes: continue
-            to = nodes[d]
-            digraph +=f'N{curr} -> N{to} [label="" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{d}" labeltooltip="{d}"]\n'
+        for k in project_inf:
+            inf = project_inf[k]
+            curr = nodes[inf["name"]]
+            curr_idx = curr["idx"]
+            dependencies = inf['dependencies']
+            for d in dependencies:
+                if d not in nodes: continue
+                to = nodes[d]
+                to_idx = to["idx"]
+                digraph +=f'N{curr_idx} -> N{to_idx} [label="" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{d}" labeltooltip="{d}"]\n'
+        digraph += "}\n"
+    else:
+        rootk = ""
+        for k in project_inf:
+            if root in k:
+                rootk = k
+                break
+        if rootk == "":
+            raise ValueError("Root node not found")
 
-    digraph += "}\n"
+        nodes = {}
+        par = [project_inf[k]]
+        met = {}
+        ni = 1
+        while len(par) > 0:
+            p = par.pop()
+            nodes[p["name"]] = { "idx" : ni, "inf": p }
+            name = p['name']
+            met[name] = 1
+            digraph +=f'N{ni} [label="{name}" id="node{ni}" fontsize=8 shape=box color="#b20400" fillcolor="#edd6d5"]\n'
+            ni+=1
+            for d in p["dependencies"]:
+                if d in met: continue
+                par.append(project_inf[d])
+
+        for no in nodes:
+            inf = nodes[no]["inf"]
+            curr = nodes[no]
+            curr_idx = curr["idx"]
+            dependencies = inf['dependencies']
+            for d in dependencies:
+                if d not in nodes: continue
+                to = nodes[d]
+                to_idx = to["idx"]
+                digraph +=f'N{curr_idx} -> N{to_idx} [label="" labelfloat=false fontsize=6 weight=1 color="#b2a999" tooltip="{d}" labeltooltip="{d}"]\n'
+        digraph += "}\n"
+
     # print(digraph)
 
     with open("out.txt", "+w") as f:
