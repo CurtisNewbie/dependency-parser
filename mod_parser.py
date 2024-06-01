@@ -19,14 +19,14 @@ if __name__ == "__main__":
     project_list = [
         # "goauth"
         # "gocommon",
+        # "hammer",
+        # "doc-indexer",
         "miso",
         "postbox",
         "gatekeeper",
         "vfm",
         "user-vault",
-        "hammer",
         "event-pump",
-        "doc-indexer",
         "logbot",
         "mini-fstore",
     ]
