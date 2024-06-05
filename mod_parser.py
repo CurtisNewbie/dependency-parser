@@ -108,9 +108,9 @@ if __name__ == "__main__":
     digraph += "}\n"
     # print(digraph)
 
-    with open("out.txt", "+w") as f:
+    with open("/tmp/dp_out.txt", "+w") as f:
         f.write(digraph)
 
-    print(cli_run("dot -Gdpi=300 -Tpng out.txt > out.png && open out.png"))
+    print(cli_run("dot -Gdpi=300 -Tpng /tmp/dp_out.txt > /tmp/dpout.png && open /tmp/dpout.png"))
 
     # python3 mod_parser.py ~/dev/git
