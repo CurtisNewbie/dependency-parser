@@ -130,3 +130,4 @@ dmypy.json
 *.svg
 *.txt
 *.json
+out.png

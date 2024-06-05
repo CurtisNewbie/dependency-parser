@@ -21,8 +21,8 @@ if __name__ == "__main__":
         # "gocommon",
         # "hammer",
         # "doc-indexer",
+        # "postbox",
         "miso",
-        "postbox",
         "gatekeeper",
         "vfm",
         "user-vault",
@@ -111,6 +111,6 @@ if __name__ == "__main__":
     with open("out.txt", "+w") as f:
         f.write(digraph)
 
-    print(cli_run("dot -Tsvg out.txt > out.svg && open svg.html"))
+    print(cli_run("dot -Gdpi=300 -Tpng out.txt > out.png && open out.png"))
 
     # python3 mod_parser.py ~/dev/git
