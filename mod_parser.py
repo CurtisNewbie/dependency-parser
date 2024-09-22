@@ -29,6 +29,7 @@ if __name__ == "__main__":
         "event-pump",
         "logbot",
         "mini-fstore",
+        "acct"
     ]
 
     rootdir = sys.argv[1]
