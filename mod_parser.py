@@ -36,12 +36,15 @@ if __name__ == "__main__":
     rootpath = Path(rootdir).absolute()
     project_inf = []
 
+    miso_found = False
     for d in rootpath.iterdir():
         if not d.is_dir(): continue
         for pl in project_list:
             plp = str(rootpath) + os.sep + pl
             dp = str(d)
             if dp == plp:
+                if pl == "miso":
+                    miso_found = True
                 project_inf.append({
                     "name": pl,
                     "dir" : plp,
@@ -49,9 +52,17 @@ if __name__ == "__main__":
                     "dependencies": [],
                 })
                 break
+    if not miso_found:
+        project_inf.append({
+            "name": "miso",
+            "dir": "",
+            "mod": "",
+            "dependencies": []
+        })
 
     for inf in project_inf:
         p = inf["dir"]
+        if not p: continue
         found = False
         for f in os.listdir(p):
             if f == "go.mod":
@@ -65,12 +76,13 @@ if __name__ == "__main__":
     # for inf in project_inf: print(inf)
 
     for inf in project_inf:
-        with open(inf['mod']) as fi:
-            li = fi.readlines()
-            for l in li:
-                l = l.strip()
-                if l.startswith(prefix):
-                    inf["dependencies"].append(l)
+        if inf['mod']:
+            with open(inf['mod']) as fi:
+                li = fi.readlines()
+                for l in li:
+                    l = l.strip()
+                    if l.startswith(prefix):
+                        inf["dependencies"].append(l)
 
     # for inf in project_inf: print(inf)
 
